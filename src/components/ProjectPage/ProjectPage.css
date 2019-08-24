@@ -1,0 +1,19 @@
+.pos1{
+    display :flex;
+    
+
+}
+.pos3{
+    flex:1;
+    order:1;
+   
+}
+.pos2{
+flex:1;
+order:2;
+
+}
+.pos4{
+flex:1;
+order:3;
+}

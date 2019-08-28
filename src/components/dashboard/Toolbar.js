@@ -1,13 +1,19 @@
-import React from 'react'
+import React from "react";
 
-import './Toolbar.css'
-import Togglebutton from './Togglebutton';
+import "./Toolbar.css";
+import Togglebutton from "./Togglebutton";
+
+var firebase = require("firebase");
+
+var x = localStorage.getItem("username");
 
 const toolbar = props => (
   <header className="toolbar">
     <nav className="toolbar__navigation">
       <div />
-      <div> <Togglebutton click={ props.drawerClickHandler}/>
+      <div>
+        {" "}
+        <Togglebutton click={props.drawerClickHandler} />
       </div>
       <div className="toolbar__logo">
         <a href="/">NINELEAPS TEST SUITE MANAGEMENT</a>
@@ -15,20 +21,19 @@ const toolbar = props => (
       <div className="spacer" />
       <div className="toolbar_navigation-items">
         <ul>
-          <li>
-            <a href="/">UserName</a>
-          </li>
+          <li>{x}</li>
           <li>
             <a href="/">Help</a>
           </li>
           <li>
-            <a href="/">Logout</a>
+            <a onClick={() => firebase.auth().signOut()} href="/">
+              Log Out
+            </a>
           </li>
         </ul>
       </div>
     </nav>
   </header>
-)
+);
 
-export default toolbar
-
+export default toolbar;

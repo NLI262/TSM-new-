@@ -35,23 +35,21 @@ order:3;
     order:1;
     background-color:white;
 } 
-  /* .part2{
-    flex:1;
-    order:3;
-    background-color:white; 
-} */
+ 
 .load{ 
     color:blue ;
 }
 .footer{
-    position: relative;
+    position: absolute;
    
     color:blue;
+    background-color:lightblue;
 
 }
 .project{
-   
+    background-position: absolute;
     color:rgb(14,143,212);
+    background-color:lightblue;
    
     
 

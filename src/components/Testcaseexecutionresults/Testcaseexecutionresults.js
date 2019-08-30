@@ -21,7 +21,9 @@ class Execute extends Component {
     status: "",
     executedBy: "",
     dateOfExecution: "",
-    file: ""
+    attachment: "",
+    testId:"",
+    date:new Date()
   };
 
   onChange1(e) {
@@ -31,23 +33,25 @@ class Execute extends Component {
     reader.readAsDataURL(files[0]);
 
     reader.onLoad = e => {
-      console.log("img data ", e.target.result);
-      const formData = { file: e.target.result };
+      //console.log("img data ", e.target.result);
+      const formData = { attachment: e.target.result };
       return axios
-        .post("/TSM/project/add", formData)
+        .post("/TSM/testrun/add", formData)
         .then(response => console.log("result", response));
     };
   }
 
   async componentDidMount() {
-    await fetch("/TSM/test/list/394")
+    await fetch("/TSM/test/list/14")
       .then(response => {
         return response.json();
       })
       .then(result => {
-        console.log(result);
+       // console.log(result);
         this.setState({
+          
           testCaseId: result.id,
+          testId:result.id,
           prerequisites: result.prerequisites,
           steps: result.steps,
           expectedOutput: result.expectedOutput
@@ -56,18 +60,20 @@ class Execute extends Component {
   }
   onSubmit = e => {
     e.preventDefault();
-    console.log(this.state);
+    console.log('sub',this.state);
     axios({
       url:
-        "https://cors-anywhere.herokuapp.com/http://3777d45b.ngrok.io/TSM/test/add",
+        "https://cors-anywhere.herokuapp.com/http://550c0cc1.ngrok.io/TSM/testrun/add",
       timeout: 20000,
-      method: "PUT",
-      responseType: "json"
+      method: "POST",
+      responseType: "json",
+      data:this.state
     }).then(res => {
-      console.log(res);
+      console.log('post',res);
     });
+  }
 
-    render();
+    render()
     {
       return (
         <div>
@@ -144,15 +150,8 @@ class Execute extends Component {
                     />
                   </Col>
                 </FormGroup>
-                {/*  <FormGroup row>
-          <Label for="examplePassword" sm={2}>Error Difference</Label>
-          <Col sm={10}>
-            <Input type="text" name="password" id="myTextField" placeholder="" 
-            value={this.state.value}
-            onChange={ e=> this.setState({errorDifference : e.target.value})}/>
-          </Col>
-      </FormGroup> */}
-                <FormGroup row>
+                
+                 <FormGroup row>
                   <Label for="exampleText" sm={2}>
                     Status
                   </Label>
@@ -195,7 +194,7 @@ class Execute extends Component {
                       placeholder=""
                       value={this.state.value}
                       onChange={e =>
-                        this.setState({ dateOfExecution: e.target.value })
+                        this.setState({ dateOfExecution: e.target.value + ' ' + this.state.date.toLocalTimeString()})
                       }
                     />
                   </Col>
@@ -203,7 +202,7 @@ class Execute extends Component {
                 <FormGroup>
                   <input
                     type="file"
-                    name="file"
+                    name="attachment"
                     id="exampleFile"
                     onChange1={e => this.onChange1(e)}
                   />
@@ -266,7 +265,7 @@ class Execute extends Component {
         </div>
       );
     }
-  };
+  
 }
 
 export default Execute;

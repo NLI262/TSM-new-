@@ -18,6 +18,7 @@ export default class Createproject extends React.Component {
       .post("/TSM/project/add", this.state)
       .then(response => {
         console.log(response);
+        window.location.reload(true);
       })
       .catch(error => {
         console.log(error);
@@ -92,6 +93,7 @@ export default class Createproject extends React.Component {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={e => this.onSubmit(e)}>
+
             {" "}
             submit
           </Button>

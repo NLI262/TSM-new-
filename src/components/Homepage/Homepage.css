@@ -33,7 +33,7 @@
     top: 10px;
     background: #2980B9;
     text-align: center;
-    height: 605px;
+    height: 580px;
     }
     
     @media all and (min-width: 600px) {
@@ -46,8 +46,4 @@
 .main { order: 2; }
 .aside-2 { order: 3; }
 .footer { order: 4; }
-    }
-    
-body {
-    padding: 2em;
     }

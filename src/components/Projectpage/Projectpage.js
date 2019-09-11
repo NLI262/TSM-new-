@@ -1,75 +1,145 @@
 import React from "react";
-import axios from "axios";
+import TSMaxios from "../Axios/TSMaxios";
 import { Button } from "react-bootstrap";
-import Toolbar from "../Dashboard/Toolbar";
+import Toolbar from "../Toolbar/Toolbar";
 import ChartForEachProject from "./Chartforeachproject";
-import Sprintcreate from "./Sprintcreate.js";
+import Sprintcreate from "../Sprintpage/Sprintcreate.js";
 import "./Projectpage.css";
-import { CardColumns, Card } from "react-bootstrap";
+import { CardColumns, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Sidedrawer from "../Sidedrawer/Sidedrawer";
 
 export default class ProjectPage extends React.Component {
   state = {
     post: null,
     id: null,
-    sprintList: []
+    sprintList: [],
+    chartData: {},
+    dataFromDB: []
   };
   async componentDidMount() {
     let id = this.props.match.params.post_id;
     this.setState({ id: id });
-    axios
-      .get("TSM/project/list/" + id)
 
-      .then(res => {
-        this.setState({
-          post: res.data
-        });
-        // console.log("project overview", res.data);
-        axios.get("TSM/sprint/list/find/" + id).then(res => {
-          this.setState({ sprintList: res.data });
-          // console.log("sprintlist", res.data);
-        });
+    TSMaxios.get("/TSM/project/list/" + id)
+    .then(res => {
+      this.setState({
+        post: res.data
       });
+
+      TSMaxios.get("/TSM/sprint/list/find/" + id).then(res => {
+        this.setState({ sprintList: res.data });
+      });
+    });
+    this.getChartData();
   }
 
+  async getChartData() {
+    const id = 384;
+    await TSMaxios.get("/TSM/chart/" + id).then(res => {
+      console.log(res.data);
+      this.setState({
+        dataFromDB: res.data
+      });
+    });
+
+    this.setState({
+      chartData: {
+        labels: ["passed", "failed", "notExecuted"],
+        datasets: [
+          {
+            label: "Projects status",
+            data: this.state.dataFromDB,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.6)",
+              "rgba(54, 162, 235, 0.6)",
+              "rgba(255, 206, 86, 0.6)"
+            ]
+          }
+        ]
+      }
+    });
+  }
+
+  addNewSprint = data => {
+    this.setState(prevState => ({
+      sprintList: [...prevState.sprintList, data]
+    }));
+  };
+
+  closeModal = () => {
+    this.setState({ addModalSprintShow: false });
+  };
+  drawOpenClickHandler = () => {
+    this.setState(prevState => {
+      return { sideDrawerOpen: !prevState.sideDrawerOpen };
+    });
+  };
+
   render() {
+    let sideDrawerOpen;
+    if (this.state.sideDrawerOpen) {
+      sideDrawerOpen = <Sidedrawer />;
+    }
+
     let addModalSprintClose = () =>
       this.setState({ addModalSprintShow: false });
-    let addModalChartClose = () => this.setState({ addModalChartShow: false });
+
     const { sprintList } = this.state;
     const post = this.state.post ? (
       <div className="post">
         <Toolbar drawerClickHandler={this.drawOpenClickHandler} />
+        <Sidedrawer show={sideDrawerOpen} />
         <br></br>
-
-        <div className="pos1">
-          <div className="pos2">
-            <Button onClick={() => this.setState({ addModalChartShow: true })}>
-              Analysis
-            </Button>
-            <ChartForEachProject
-              show={this.state.addModalChartShow}
-              onHide={addModalChartClose}
-            />
-          </div>
-          <div className="pos3">
-            <p> id : {this.state.post.id}</p>
-            <h4 className="center"> Title : {this.state.post.projectTitle}</h4>
-            <p> Description: {this.state.post.projectDescription}</p>
-            <p> Start Date : {this.state.post.startDate}</p>
-            <p> End Date : {this.state.post.endDate}</p>
-          </div>
-
-          <div className="pos4"></div>
-        </div>
+        <br></br>
+        <br></br>
+        <Container>
+          <Row>
+            <Col sm={6}>
+              <table
+                style={{ width: "400px", height: "220px", fontSize: "20px" }}
+              >
+                <tr>
+                  <td>Title :</td>
+                  <td>{this.state.post.projectTitle}</td>
+                </tr>
+                <tr>
+                  <td>Description:</td>
+                  <td>{this.state.post.projectDescription}</td>
+                </tr>
+                <tr>
+                  <td> Start Date :</td>
+                  <td>{this.state.post.startDate}</td>
+                </tr>
+                <tr>
+                  <td> End Date : </td>
+                  <td>{this.state.post.endDate}</td>
+                </tr>
+              </table>
+            </Col>
+            <Col sm={6}>
+              <ChartForEachProject
+                chartData={this.state.chartData}
+                location="projects"
+                legendPosition="bottom"
+              />
+            </Col>
+          </Row>
+        </Container>
 
         <Sprintcreate
           show={this.state.addModalSprintShow}
           onHide={addModalSprintClose}
+          projectTitle={this.state.post.projectTitle}
+          projectID={this.state.post.id}
+          updateState={this.addNewSprint}
+          closeModal={this.closeModal}
         />
         <br />
         <hr />
-
+        <h4 style={{ color: "blue", backgroundColor: "lightblue" }}>
+          Recent sprints
+        </h4>
         <CardColumns className="main-column">
           <Card style={{ width: "14rem", height: "9rem" }}>
             <Card.Body>
@@ -83,11 +153,19 @@ export default class ProjectPage extends React.Component {
           </Card>
 
           {sprintList.map(sprintList => {
-            console.log(sprintList);
+            console.log("sprint lost", sprintList);
             return (
               <div>
                 <Card border="primary" style={{ width: "14rem" }}>
                   <Card.Body>
+                    <Link
+                      to={`/sprint/${this.props.match.params.post_id}/${sprintList.id}`}
+                    >
+                      {" "}
+                      <Card.Title> {sprintList.sprintName}</Card.Title>{" "}
+                    </Link>
+                    <hr />
+                    <Card.Text></Card.Text>
                     <Link
                       to={
                         "/" +
@@ -96,22 +174,10 @@ export default class ProjectPage extends React.Component {
                         sprintList.id
                       }
                     >
-                      {" "}
-                      <Card.Title> {sprintList.sprintName}</Card.Title>{" "}
+                      <Button size="sm" variant=" outline-primary">
+                        <i class="fas fa-arrow-right"></i>
+                      </Button>
                     </Link>
-                    <hr />
-                    <Card.Text></Card.Text>
-                    <Button size="sm" variant=" outline-primary">
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    </Button>{" "}
-                    &nbsp; &nbsp;
-                    <Button size="sm" variant=" outline-primary">
-                      <i class="fa fa-trash-o" aria-hidden="true"></i>
-                    </Button>{" "}
-                    &nbsp; &nbsp;
-                    <Button size="sm" variant=" outline-primary">
-                      <i class="fas fa-arrow-right"></i>
-                    </Button>
                   </Card.Body>
                 </Card>
               </div>
@@ -120,7 +186,10 @@ export default class ProjectPage extends React.Component {
         </CardColumns>
       </div>
     ) : (
-      <div className="center"></div>
+      <div className="center">
+        {" "}
+        <i class="fa fa-spinner fa-spin" style={{ fontSize: "24px" }}></i>
+      </div>
     );
 
     return <div>{post}</div>;

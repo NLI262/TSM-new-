@@ -29,15 +29,6 @@
     text-align: center;
     }
     
-.aside-1 {
-    background: #2980B9;
-    text-align: center;
-    }
-    
-.aside-2 {
-    background: #2980B9;
-    }
-    
     @media all and (min-width: 600px) {
 .aside { flex: 1 0 0; }
     }
@@ -48,8 +39,4 @@
 .main { order: 2; }
 .aside-2 { order: 3; }
 .footer { order: 4; }
-    }
-    
-body {
-    padding: 2em;
     }

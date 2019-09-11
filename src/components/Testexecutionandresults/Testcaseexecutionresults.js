@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import "./Testcaseexecutionresults.css";
+import Toolbar from "../Toolbar/Toolbar";
+import Sidedrawer from "../Sidedrawer/Sidedrawer";
+import TSMaxios from "../Axios/TSMaxios";
+
 import {
   Col,
   Button,
@@ -9,20 +13,26 @@ import {
   Input,
   FormText
 } from "reactstrap";
-import axios from "axios";
+
 
 class Execute extends Component {
   state = {
-    testCaseId: "",
+    testCaseTitle: "",
     prerequisites: "",
     steps: "",
     expectedOutput: "",
     actualOutput: "",
     status: "",
-    executedBy: "",
-    dateOfExecution: "",
-    file: ""
+    executedBy: localStorage.getItem("username"),
+    lastUpdate: "",
+    attachment: "",
+    date:new Date()
   };
+
+  constructor() {
+    super()
+    this.state={time:new Date()}
+  }
 
   onChange1(e) {
     let files = e.target.files;
@@ -30,24 +40,32 @@ class Execute extends Component {
     let reader = new FileReader();
     reader.readAsDataURL(files[0]);
 
-    reader.onLoad = e => {
-      console.log("img data ", e.target.result);
-      const formData = { file: e.target.result };
-      return axios
-        .post("/TSM/project/add", formData)
+    reader.onLoad = (e) => {
+      const formData = { attachment: e.target.result };
+      return TSMaxios
+        .post("/TSM/testrun/add", formData)
         .then(response => console.log("result", response));
     };
   }
 
   async componentDidMount() {
-    await fetch("/TSM/test/list/394")
+    this.setState(
+      {
+        executedBy: localStorage.getItem("username")
+      },
+    );
+    
+    
+    await fetch("https://cors-anywhere.herokuapp.com/http://f2c3baf6.ngrok.io/TSM/test/list/87")
       .then(response => {
+        console.log(response);
         return response.json();
       })
       .then(result => {
-        console.log(result);
         this.setState({
-          testCaseId: result.id,
+          
+          testCaseTitle: result.testCaseTitle,
+          testId:result.id,
           prerequisites: result.prerequisites,
           steps: result.steps,
           expectedOutput: result.expectedOutput
@@ -56,33 +74,50 @@ class Execute extends Component {
   }
   onSubmit = e => {
     e.preventDefault();
-    console.log(this.state);
-    axios({
+    TSMaxios.post({
       url:
-        "https://cors-anywhere.herokuapp.com/http://3777d45b.ngrok.io/TSM/test/add",
+        "/TSM/testrun/add",
       timeout: 20000,
-      method: "PUT",
-      responseType: "json"
+      method: "POST",
+      responseType: "json",
+      data:this.state
     }).then(res => {
-      console.log(res);
+      this.props.history.goBack();
     });
+  }
 
-    render();
+  drawOpenClickHandler = () => {
+    this.setState(prevState => {                                       //function for sidebar
+      return { sideDrawerOpen: !prevState.sideDrawerOpen };
+    });
+  };
+
+  
+    render()
     {
+      let sideDrawerOpen;
+      if (this.state.sideDrawerOpen) {
+        sideDrawerOpen = <Sidedrawer />;
+      }
       return (
         <div>
+          <Toolbar drawerClickHandler={this.drawOpenClickHandler} />
+          <Sidedrawer show={sideDrawerOpen} />
+          <br />
+          <br />
+          <br />
           <div class="wrapper">
             <article class="main">
               <Form>
                 <FormGroup row>
                   <Label for="examplesprint" sm={2}>
-                    Testcase Id
+                    Testcase Title
                   </Label>
                   <Col sm={10}>
-                    <Input
+                    <Input disabled
                       type="text"
                       id="examplesprint"
-                      value={this.state.testCaseId}
+                      value={this.state.testCaseTitle}
                     />
                   </Col>
                 </FormGroup>
@@ -91,8 +126,8 @@ class Execute extends Component {
                     Pre Requisites
                   </Label>
                   <Col sm={10}>
-                    <Input
-                      type="text"
+                    <Input disabled
+                      type="textarea"
                       id="examplerequisites"
                       value={this.state.prerequisites}
                     />
@@ -103,7 +138,7 @@ class Execute extends Component {
                     Steps
                   </Label>
                   <Col sm={10}>
-                    <Input
+                    <Input disabled
                       type="textarea"
                       id="examplesteps"
                       value={this.state.steps}
@@ -115,8 +150,8 @@ class Execute extends Component {
                     Expected Output
                   </Label>
                   <Col sm={10}>
-                    <Input
-                      type="text"
+                    <Input disabled
+                      type="textarea"
                       id="exampleoutput"
                       value={this.state.expectedOutput}
                     />
@@ -144,26 +179,19 @@ class Execute extends Component {
                     />
                   </Col>
                 </FormGroup>
-                {/*  <FormGroup row>
-          <Label for="examplePassword" sm={2}>Error Difference</Label>
-          <Col sm={10}>
-            <Input type="text" name="password" id="myTextField" placeholder="" 
-            value={this.state.value}
-            onChange={ e=> this.setState({errorDifference : e.target.value})}/>
-          </Col>
-      </FormGroup> */}
                 <FormGroup row>
-                  <Label for="exampleText" sm={2}>
-                    Status
-                  </Label>
+                <Label for="exampleSelect" sm={2}>
+                  Status
+                </Label>
                   <Col sm={10}>
-                    <Input
-                      type="text"
-                      name="text"
-                      id="myTextField"
-                      value={this.state.value}
-                      onChange={e => this.setState({ status: e.target.value })}
-                    />
+                  <Input type="select" name="select" id="exampleSelect"
+                    value={this.state.value}
+                    onChange={e =>
+                      this.setState({ status: e.target.value })}>
+                    <option></option>
+                    <option value="pass">pass</option>
+                    <option value="fail">fail</option>
+                  </Input>
                   </Col>
                 </FormGroup>
                 <FormGroup row>
@@ -176,10 +204,9 @@ class Execute extends Component {
                       name="email"
                       id="exampleEmail"
                       placeholder=""
-                      value={this.state.value}
-                      onChange={e =>
-                        this.setState({ executedBy: e.target.value })
-                      }
+                      value={localStorage.getItem("username")}
+                      onChange={e => 
+                        this.setState({ executedBy: e.target.value})}
                     />
                   </Col>
                 </FormGroup>
@@ -195,78 +222,37 @@ class Execute extends Component {
                       placeholder=""
                       value={this.state.value}
                       onChange={e =>
-                        this.setState({ dateOfExecution: e.target.value })
+                        this.setState({ lastUpdate: e.target.value + ' ' + this.state.time.toLocaleTimeString()})
                       }
                     />
                   </Col>
                 </FormGroup>
-                <FormGroup>
+                <FormGroup row>
+                  <Label sm={2}>
+                    Attachment
+                  </Label> 
+                  <Col sm={10}>
                   <input
                     type="file"
-                    name="file"
+                    name="attachment"
                     id="exampleFile"
-                    onChange1={e => this.onChange1(e)}
+                    onClick={(e) => this.onChange1(e)}
                   />
+                  </Col>
                   <FormText color="muted">
                     Upload your file (image or text file)
                   </FormText>
                 </FormGroup>
-
-                <Button onClick={e => this.onSubmit(e)}>Okay</Button>
+                <Button color="primary" onClick={e => this.onSubmit(e)}>Save</Button> &nbsp;  
+                <Button color="primary" onClick={()=>this.props.history.goBack()}>Cancel</Button>
               </Form>
             </article>
-
-            <aside class="aside aside-1">
-              <br />
-              <br />
-              <br />
-              <br />
-              <font color="white" size="5">
-                Test Suite Management
-              </font>
-              <br></br>
-            </aside>
-
-            <aside class="aside aside-2">
-              <br />
-
-              <font color="white" size="5">
-                Homepage
-              </font>
-              <br />
-              <br />
-
-              <font color="white" size="5">
-                Dashboard
-              </font>
-              <br />
-              <br />
-
-              <font
-                color="white"
-                size="5"
-                href="https://www.nineleaps.com/company/"
-              >
-                About Us
-              </font>
-              <br />
-              <br />
-
-              <font
-                color="white"
-                size="5"
-                href="https://www.nineleaps.com/contact/"
-              >
-                Contact Us
-              </font>
-              <br />
-              <br />
-            </aside>
           </div>
+        
         </div>
       );
     }
-  };
+  
 }
 
 export default Execute;

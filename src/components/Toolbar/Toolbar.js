@@ -1,7 +1,6 @@
 import React from "react";
-
 import "./Toolbar.css";
-import Togglebutton from "./Togglebutton";
+import Togglebutton from "../Togglebutton/Togglebutton";
 
 var firebase = require("firebase");
 
@@ -16,19 +15,19 @@ const toolbar = props => (
         <Togglebutton click={props.drawerClickHandler} />
       </div>
       <div className="toolbar__logo">
-        <a href="/">NINELEAPS TEST SUITE MANAGEMENT</a>
+        <a href="/dashboard">TEST SUITE MANAGEMENT</a>
       </div>
       <div className="spacer" />
       <div className="toolbar_navigation-items">
         <ul>
-          <li>{x}</li>
           <li>
-            <a href="/">Help</a>
+            {x}
           </li>
           <li>
-            <a onClick={() => firebase.auth().signOut()} href="/">
-              Log Out
-            </a>
+            <a href="">Help</a>
+          </li>
+          <li>
+            <a onClick={() => firebase.auth().signOut() }href="/">Logout</a>
           </li>
         </ul>
       </div>

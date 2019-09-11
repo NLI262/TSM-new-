@@ -1,8 +1,8 @@
 .side-drawer{
 
-    height:878px;
+    height:678px;
     background:white;
-    box-shadow:2px 0px 5px rgba(0,0,0,0);
+    box-shadow:2px 0px 5px rgba(0,0,0,0.4);
     position: absolute;
     top:56px;
      left:0;

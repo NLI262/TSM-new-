@@ -11,12 +11,12 @@ const Sidedrawer = props => {
         <br></br>
         <ul type="none">
           <li>
-            <a href="/">Dashboard Overview</a>
+            <a href="/dashboard">Dashboard Overview</a>
             &nbsp; <i class="fas fa-tachometer-alt fa-1x"></i>
           </li>
           <br></br>
           <li>
-            <a href="/pp">Customizations</a>{" "}
+            <a href="">Customizations</a>{" "}
             <i class="fa fa-gear fa-spin fa-1x"></i>
           </li>
         </ul>

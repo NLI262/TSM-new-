@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Form, Col } from "react-bootstrap";
 import { Modal, Button } from "react-bootstrap";
 
@@ -18,10 +17,10 @@ export default class Editproject extends React.Component {
   }
 
   componentDidMount() {
-    console.log("props", this.props);
+    
     this.setState(
       {
-        id: this.props.data && this.props.data.id ? this.props.data.id : "",
+        id: this.props.data && this.props.data.id ? this.props.data.id : "",      //props from display page
         projectTitle:
           this.props.data && this.props.data.projectTitle
             ? this.props.data.projectTitle
@@ -40,15 +39,15 @@ export default class Editproject extends React.Component {
             : "",
         googleAutheticationId: localStorage.getItem("tokenid")
       },
-      console.log("didMount", this.state)
+      
     );
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("nextprops data", nextProps);
+   
     this.setState(
       {
-        id: nextProps.data && nextProps.data.id ? nextProps.data.id : "",
+        id: nextProps.data && nextProps.data.id ? nextProps.data.id : "",   // update a state value with new prop value
         projectTitle:
           nextProps.data && nextProps.data.projectTitle
             ? nextProps.data.projectTitle
@@ -64,11 +63,11 @@ export default class Editproject extends React.Component {
         endDate:
           nextProps.data && nextProps.data.endDate ? nextProps.data.endDate : ""
       },
-      console.log("nextProps", this.state)
+      // console.log("nextProps", this.state)
     );
   }
   handleChange(event) {
-    event.preventDefault();
+    event.preventDefault();                                       //takes input and sets a target value
     this.setState({
       [event.target.name]: event.target.value
     });
@@ -147,7 +146,7 @@ export default class Editproject extends React.Component {
               onClick={async () => await this.props.onSubmit(this.state)}
             >
               {" "}
-              submit
+              Save
             </Button>
           </Modal.Footer>
         </Modal>

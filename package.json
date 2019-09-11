@@ -3,15 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.3.3",
     "@opuscapita/react-dates": "^0.5.9",
+    "antd": "^3.23.1",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
+    "firebase": "^6.5.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.10",
     "react-chartjs-2": "^2.7.6",
+    "react-datepicker": "^2.9.4",
     "react-dates": "^20.2.5",
     "react-dom": "^16.8.6",
+    "react-firebaseui": "^4.0.0",
     "react-redux": "^7.1.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
@@ -41,5 +46,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://192.168.1.215:8082/"
+  "proxy": "https://cors-anywhere.herokuapp.com/http://cb6af570.ngrok.io"
 }

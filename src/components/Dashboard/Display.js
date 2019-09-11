@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardColumns } from "react-bootstrap";
+import { Card, CardDeck, CardColumns } from "react-bootstrap";
 import Createproject from "./Createproject.js";
 import { Link } from "react-router-dom";
 import Editproject from "./Editproject.js";
@@ -10,7 +10,6 @@ export default class Display extends React.Component {
     super(props);
     this.state = {
       items: [],
-      abc: [],                                                              // empty states
       isLoaded: true,
       visible: 5,
       editContent: null
@@ -22,12 +21,13 @@ export default class Display extends React.Component {
 
   loadMore() {
     this.setState(prev => {
-      return { visible: prev.visible + 2 };                                   // load more function 
+      return { visible: prev.visible + 4 };                                   // load more function 
     });
   }
 
   async componentDidMount() {
-    const items = await (await fetch(`TSM/project/list`)).json();               //fetch method to display all projects
+  
+    const items = await (await fetch(`https://cors-anywhere.herokuapp.com/http://f2c3baf6.ngrok.io/TSM/project/list`)).json();               //fetch method to display all projects
     this.setState({ items });
   }
 
@@ -38,17 +38,17 @@ export default class Display extends React.Component {
       }).then(response => {
         if (response.status === 200) {
           alert("project deleted successfully");
-          fetch("/TSM/project/all")
-            .then(response => {
-              return response.json();
-            })
-            .then(result => {
-              // console.log(result);
-              this.setState({
-                websites: result
-              });
-            });
-        }
+         
+         this.setState(prevState => {
+            
+          return{
+          
+          items:[...prevState.items.filter(e => e.id !==id)]
+                 
+          }})
+         
+            }
+        
       });
     }
   }
@@ -63,12 +63,42 @@ export default class Display extends React.Component {
       body: JSON.stringify({ ...data }),                               // put method in fetch to update state values 
       headers: { "Content-type": "application/json; charset=UTF-8" }
     }).then(response => {
-      if (response.status === 200) {
-        alert("project update successfully.");
-      }
-      this.setState({ addModal_Show: false });
+      if(response.status===200)
+      {
+         this.setState(prevState => {
+            
+          return{
+          
+          items:[...prevState.items.filter(e => e.id !==data.id)]
+                 
+          }
+          
+      })
+
+      this.setState(prevState => {
+            
+        return{
+          addModal_Show: false,
+                items:[...prevState.items,data]
+               
+        }
+        
+    })
+
+    }
     });
   };
+  addNewProject = (data)=>
+  {
+    this.setState(prevState => ({
+      items: [...prevState.items, data]
+    }))
+  }
+
+  closeModal = ()=>
+  {
+    this.setState({ addModalShow: false });
+  }
 
   render() {
     let addModalClose = () => this.setState({ addModalShow: false });              // modal function for create projet
@@ -80,12 +110,17 @@ export default class Display extends React.Component {
     } else {
       return (
         <section>
-          <h4 className="project">Recent Projects</h4>
+         
 
           <hr />
-          <div className="column-layout">                                          
-            <CardColumns className="main-column">
-              <Card style={{ width: "14rem", height: "9rem" }}>                       
+          <h4 className="project" style={{textAlign:"20px"}}>Recent Projects </h4>   
+          <div className="column-layout">  
+         
+            <div  className="main-column">
+                                           
+            <CardColumns>
+               
+              <Card style={{ width: "17rem", height: "9rem" }}>                       
                 <Card.Body>
                   <Button
                     onClick={() => this.setState({ addModalShow: true })}
@@ -100,9 +135,9 @@ export default class Display extends React.Component {
                 .slice(0, this.state.visible)
                 .map((item, index) => {
                   return (                                                                        //mapping done for diplaying all projects and slice method used for load more button
-                    <Card border="primary" style={{ width: "14rem" }}>
+                    <Card border="primary" style={{ width: "17rem" }}>
                       <Card.Body>
-                        <Link to={"/" + item.id}>
+                        <Link to={`/project/${item.id}`}>
                           {" "}
                           <Card.Title key={item.id}>
                             {" "}
@@ -146,14 +181,17 @@ export default class Display extends React.Component {
                   );
                 })}
             </CardColumns>
-
+  </div>
             <div className="part1"></div>
+            <div className="part2"> </div>
             
           </div>
 
           <Createproject
             show={this.state.addModalShow}
-            onHide={addModalClose}                             // show declared to open popup and onhide to close the popup
+            onHide={addModalClose} 
+            updateState= {this.addNewProject}
+            closeModal= {this.closeModal}                            // show declared to open popup and onhide to close the popup
           />
           <Editproject
             data={this.state.editContent}

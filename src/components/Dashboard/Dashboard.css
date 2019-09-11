@@ -30,6 +30,10 @@ order:3;
     flex:2;
     order:2;
 }
+.part2{
+    flex:1;
+    order:2;
+}
  .part1{
     flex:1;
     order:1;
@@ -40,16 +44,17 @@ order:3;
     color:blue ;
 }
 .footer{
-    position: absolute;
+    position: relative;
    
     color:blue;
-    background-color:lightblue;
+    
 
 }
 .project{
-    background-position: absolute;
-    color:rgb(14,143,212);
+    
     background-color:lightblue;
+    color:rgb(14,143,212);
+    text-align:'justify';
    
     
 

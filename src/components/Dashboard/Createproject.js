@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import TSMaxios from "../Axios/TSMaxios";
 import { Form, Col } from "react-bootstrap";
 import { Modal, Button } from "react-bootstrap";
 
@@ -13,28 +13,38 @@ export default class Createproject extends React.Component {
   };
   onSubmit = e => {
     e.preventDefault();
-    console.log(this.state);
-    axios
+    // console.log(this.state);
+    TSMaxios
       .post("/TSM/project/add", this.state)
       .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+         console.log(response);
+         if(response.status===200)
+         {
+         
+         this.props.updateState(response.data);
+         this.props.closeModal();
+ 
+         }
+        }
+      
+      );
+      // .catch(error => {
+      //   console.log(error);
+      // });
   };
 
   render() {
+    let addModalClose = () => this.setState({ addModalShow: false });
     return (
       <Modal
         {...this.props}
-        size="lg"
+        size="lg"                                                         //modal for create a new project
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Create a new Project
+            Create New Project
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -91,9 +101,13 @@ export default class Createproject extends React.Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={e => this.onSubmit(e)}>
+          <Button onClick={async () => await this.props.onHide(this.state)}>       
             {" "}
-            submit
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={e => this.onSubmit(e)}>       
+            {" "}
+            Save
           </Button>
         </Modal.Footer>
       </Modal>

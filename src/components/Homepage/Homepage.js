@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./Homepage.css";
-import axios from "axios";
+import TSMaxios from "../Axios/TSMaxios";
 import firebase from "firebase";
 import { StyledFirebaseAuth } from "react-firebaseui";
 
@@ -16,8 +16,11 @@ class HomePage extends Component {
     signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
 
     callbacks: {
-      signInSuccessWithAuthResult: () => false
+      signInSuccessWithAuthResult: () => {
+      
+      return false;
     }
+  }
   };
 
   componentDidMount = () => {
@@ -45,18 +48,19 @@ class HomePage extends Component {
           uid: uid
         });
       }
-      axios.post("/TSM/Login/add", JSONobj).then(res => {
+      TSMaxios.post("/TSM/Login/add", JSONobj).then(res => {
         console.log("Hello");
         console.log(res);
       });
 
       if (user) {
-        window.location = "/dash";
+        this.props.history.push('/dashboard');
       }
     });
   };
 
   render() {
+    
     return (
       <div>
         <div class="wrapper">
@@ -102,4 +106,3 @@ class HomePage extends Component {
 }
 
 export default HomePage;
-

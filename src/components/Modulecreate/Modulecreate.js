@@ -1,32 +1,44 @@
 import React from "react";
-import axios from "axios";
+import TSMaxios from "../Axios/TSMaxios";
 import { Form, Col } from "react-bootstrap";
 import { Modal, Button } from "react-bootstrap";
 
 export default class Sprintcreate extends React.Component {
   state = {
-    sprintName: "",
-    projectId: ""
+    moduleName: "",
+    sprintId: "",
+    show:"",
+
   };
+
+
   componentDidMount() {
-    // console.log("props", this.props);
+
+    
     this.setState({
-      id:
-        this.props.details && this.props.details.id
-          ? this.props.details.projectId
-          : ""
-    });
-    // console.log("got", this.state);
-  }
+     sprintId:
+       this.props.sprintID 
+         ? this.props.sprintID
+         : " ",
+         show : this.props.show
+   });
+  
+ }
 
   onSubmit = e => {
     e.preventDefault();
-   // console.log(this.state);
-    axios
-      .post("/TSM/sprint/add", this.state)
+
+    TSMaxios
+      .post("/TSM/module/add", this.state) //submit a module for a sprint
       .then(response => {
         console.log(response);
-        this.setState({ addModalSprintShow: false });
+        if(response.status===200)
+        {
+        
+        this.props.updateState(response.data);
+        this.props.closeModal();
+
+        }
       })
       .catch(error => {
         console.log(error);
@@ -43,7 +55,7 @@ export default class Sprintcreate extends React.Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Create a new Sprint
+            Create New Module
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -51,38 +63,34 @@ export default class Sprintcreate extends React.Component {
             <Form>
               <Form.Row>
                 <Form.Group as={Col} controlId="formGridEmail">
-                  <Form.Label> sprint Name</Form.Label>
-                  <Form.Control
+                  <Form.Label> Module Name</Form.Label>        
+                  <Form.Control              // enter module name
                     type="text"
-                    placeholder="sprint "
+                    placeholder="Module Name "
                     value={this.state.value}
                     onChange={e =>
-                      this.setState({ sprintName: e.target.value })
+                      this.setState({ moduleName: e.target.value })
                     }
                   />
                 </Form.Group>
                 <Form.Group as={Col} controlId="formGridPassword">
-                  <Form.Label>Project ID</Form.Label>
+                  <Form.Label>Sprint Id</Form.Label>
                   <Form.Control
                     type="disabled"
-                    value={this.state.value}
-                    onChange={e => this.setState({ projectId: e.target.value })}
+                    value={this.props.sprintName}
+                    
                   />
                 </Form.Group>
               </Form.Row>
             </Form>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={async () => await this.props.onHide(this.state)}>
+        <Modal.Footer>            
+          <Button variant="primary" onClick={e => this.onSubmit(e)}>     
             {" "}
-            close
+            Save                  
           </Button>
-          <Button variant="primary" onClick={e => this.onSubmit(e)}>
-            {" "}
-            submit
-          </Button>
-        </Modal.Footer>
+        </Modal.Footer>    
       </Modal>
     );
   }

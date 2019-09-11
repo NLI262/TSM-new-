@@ -1,9 +1,10 @@
 import React from "react";
 import Display from "./Display.js";
-import Toolbar from "./Toolbar.js";
-import Sidedrawer from "./Sidedrawer.js";
+import Toolbar from "../Toolbar/Toolbar.js";
+import Sidedrawer from "../Sidedrawer/Sidedrawer.js";
 import ChartForAllProjects from "./Chartforallprojects.js";
 import "./Dashboard.css";
+
 
 export default class Dashboard extends React.Component {
   state = {
@@ -34,8 +35,11 @@ export default class Dashboard extends React.Component {
         </main>
         <div>
           {" "}
-          <footer className="footer"> privacy and policy @ 2019</footer>{" "}
+          
         </div>
+        
+      
+            
       </div>
     );
   }

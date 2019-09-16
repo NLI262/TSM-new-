@@ -1,0 +1,68 @@
+
+
+
+.par{
+
+    flex:2;
+    order:1;
+    
+} 
+.sidebar-one{
+
+flex:1;
+order:3;
+}
+.sidebar-two{
+
+    flex:2;
+    order:2;
+}
+.chart{
+    display:flex;
+    
+
+}
+.column-layout{
+    display:flex;
+ 
+}
+.main-column{
+    flex:2;
+    order:2;
+}
+.part2{
+    flex:1;
+    order:2;
+}
+ .part1{
+    flex:1;
+    order:1;
+    background-color:white;
+} 
+ 
+.load{ 
+    color:blue ;
+}
+.footer{
+    position: relative;
+   
+    color:blue;
+    
+
+}
+.project{
+    
+    background-color:whitesmoke;
+    color:rgb(14,143,212);
+    text-align:'justify';
+    box-shadow: 1px 2px whitesmoke;
+   
+    
+
+}
+.cardstyle{
+    box-shadow: 1px 1px #CCCCCC;
+}
+
+
+

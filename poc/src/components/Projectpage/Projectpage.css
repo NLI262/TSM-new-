@@ -1,0 +1,30 @@
+.pos1{
+    display :flex;
+    
+
+}
+.pos3{
+    flex:1;
+    order:2;
+  
+   
+}
+.pos2{
+flex:1;
+order:3;
+
+}
+.overview{
+    box-shadow: 1px 1px #CCCCCC;
+}
+.spinner{
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+   
+    background-size: 100%;
+}

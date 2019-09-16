@@ -1,0 +1,9 @@
+2019/07/26-15:50:12.885 13607 Reusing MANIFEST /home/nineleaps/snap/postman/81/.config/Postman/IndexedDB/file__0.indexeddb.leveldb/MANIFEST-000001
+2019/07/26-15:55:14.694 13607 Current memtable full; waiting...
+2019/07/26-15:55:14.694 14201 Level-0 table #5: started
+2019/07/26-15:55:14.698 14201 Level-0 table #5: 8092 bytes OK
+2019/07/26-15:55:14.701 14201 Delete type=0 #3
+2019/07/26-15:55:14.702 14201 Level-0 table #7: started
+2019/07/26-15:55:14.702 14201 Level-0 table #7: 0 bytes OK
+2019/07/26-15:55:14.705 14201 Delete type=0 #4
+2019/07/26-15:55:14.706 14201 Manual compaction at level-0 from '\x00\x02\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x03\x00\x00\x00' @ 0 : 0; will stop at (end)

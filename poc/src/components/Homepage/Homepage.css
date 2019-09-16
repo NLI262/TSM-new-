@@ -1,0 +1,49 @@
+.wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    }
+    
+.wrapper > * {
+    padding: 10px;
+    flex: 1 100%;
+    }
+    
+.header {
+    background: white;
+    color: #2980B9
+    }
+    
+/* .footer {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color:white;
+    color:#2980B9;
+    text-align: center;
+    position: absolute;
+    }  */
+    
+.main {
+    text-align: left;
+    background: white;
+    text-align: center;
+    }
+    
+.aside-1 {
+    top: 10px;
+    background: #2980B9;
+    text-align: center;
+    height: 580px;
+    }
+    
+    @media all and (min-width: 600px) {
+.aside { flex: 1 0 0; }
+    }
+    
+    @media all and (min-width: 800px) {
+.main { flex: 3 0px; }
+.aside-1 { order: 1; }
+.main { order: 2; }
+.aside-2 { order: 3; }
+.footer { order: 4; }
+    }
